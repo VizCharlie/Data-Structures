@@ -1,0 +1,84 @@
+import java.util.Scanner;
+
+public class lowestCommonSubsequence {
+	
+//	static void displayArr(int matrixArr[][], String str1, String str2){
+//		int indexX, indexY;
+//		
+//		for(indexX = 0 ; indexX <= str1.length() ; indexX++){
+//			for(indexY = 0 ; indexY <= str2.length() ; indexY++){
+//				System.out.print(matrixArr[indexX][indexY] + " ");
+//			}
+//			System.out.println("");
+//		}
+//	}
+	
+	static void makeLCSArr(int matrixArr[][], int matrixRefArr[][], String str1, String str2){
+		int indexX, indexY;
+		
+		for(indexX = 1 ; indexX <= str1.length() ; indexX++){
+			for(indexY = 1 ; indexY <= str2.length() ; indexY++){
+				if(str1.charAt(indexX - 1) == (str2.charAt(indexY - 1))){
+					matrixArr[indexX][indexY] = matrixArr[indexX-1][indexY-1] + 1;
+					matrixRefArr[indexX][indexY] = Integer.valueOf(String.valueOf(indexX - 1) + String.valueOf(indexY - 1));
+}
+				else{
+					if(matrixArr[indexX - 1][indexY] >= matrixArr[indexX][indexY - 1]){
+						matrixArr[indexX][indexY] = matrixArr[indexX-1][indexY];
+						matrixRefArr[indexX][indexY] = Integer.valueOf(String.valueOf(indexX - 1) + String.valueOf(indexY));
+					}
+					else{
+						matrixArr[indexX][indexY] = matrixArr[indexX][indexY-1];
+						matrixRefArr[indexX][indexY] = Integer.valueOf(String.valueOf(indexX) + String.valueOf(indexY - 1));
+					}
+				}
+			}
+		}
+	}
+	
+		
+	static String getLCS(int matrixRefArr[][], String str1, String str2){
+		int indexX = str1.length(), indexY = str2.length();
+		int tempIndexX = 0, tempIndexY = 0;
+		String str = "";
+		
+		while( indexX > 0 || indexY > 0 ){
+			if(Integer.valueOf(String.valueOf(indexX) + String.valueOf(indexY)) - matrixRefArr[indexX][indexY]  == 11){
+				str += str1.charAt(indexX - 1);
+				tempIndexX = matrixRefArr[indexX][indexY] / 10;
+				tempIndexY = matrixRefArr[indexX][indexY] % 10;
+			}
+			else{
+				tempIndexX = matrixRefArr[indexX][indexY] / 10;
+				tempIndexY = matrixRefArr[indexX][indexY] % 10;
+			}
+			
+			indexX = tempIndexX;
+			indexY = tempIndexY;
+		}
+		
+		String LCS = new StringBuffer(str).reverse().toString();
+		return LCS;
+	}
+	
+	public static void main(String[] args) {
+		
+		Scanner input = new Scanner(System.in);
+		
+		System.out.println("Enter First String");
+		String str1 = input.next();
+		System.out.println("Enter Second String");
+		String str2 = input.next();
+		
+		int[][] matrixArr = new int[str1.length() + 1][str2.length() + 1];
+		int[][] matrixRefArr = new int[str1.length() + 1][str2.length() + 1];
+		
+		makeLCSArr(matrixArr, matrixRefArr, str1, str2);
+		
+//		displayArr(matrixArr, str1, str2);
+//		
+//		displayArr(matrixRefArr, str1, str2);
+		
+		System.out.println("LCS is : " + getLCS(matrixRefArr, str1, str2));
+	}
+}
